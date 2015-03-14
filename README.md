@@ -1,3 +1,3 @@
 ## db
 
-The data repository service of gofinances
+The data repository service of gofinances.
