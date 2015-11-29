@@ -15,8 +15,10 @@ import (
 )
 
 var _ = Describe("gosum", func() {
-	const url = "http://localhost:8080/data"
-	const redisUrl = "local.lattice.cf:6379"
+	const (
+		url      = "http://localhost:8080/data"
+		redisUrl = "local.lattice.cf:6379"
+	)
 
 	var testRecords record.Records
 
