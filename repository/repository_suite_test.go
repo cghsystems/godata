@@ -1,4 +1,4 @@
-package db_test
+package repository_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -10,4 +10,8 @@ import (
 func TestDb(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Db Suite")
+}
+
+func startRedis() {
+
 }
