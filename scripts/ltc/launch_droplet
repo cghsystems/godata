@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ltc launch-droplet cgh-data cgh-data -- bin/main
