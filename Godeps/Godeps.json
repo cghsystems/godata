@@ -1,0 +1,28 @@
+{
+	"ImportPath": "github.com/cghsystems/godata",
+	"GoVersion": "go1.5.1",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/cghsystems/gosum/record",
+			"Rev": "52a9e573ec1d019dea724658370358994a53670c"
+		},
+		{
+			"ImportPath": "github.com/fzzy/radix/redis",
+			"Comment": "v0.5.6-2-g3528e87",
+			"Rev": "3528e87a910c6730810cec1be187f989d7d9442a"
+		},
+		{
+			"ImportPath": "github.com/onsi/ginkgo",
+			"Comment": "v1.2.0-beta",
+			"Rev": "0efbdc3a60137c0757b84e994a56037378170913"
+		},
+		{
+			"ImportPath": "github.com/onsi/gomega",
+			"Comment": "v1.0-25-g85936b2",
+			"Rev": "85936b29809b7df066a8d839dd105e158e510264"
+		}
+	]
+}
