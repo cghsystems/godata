@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/cghsystems/godata/health"
 	"github.com/cghsystems/godata/repository"
 	"github.com/cghsystems/gosum/record"
 )
@@ -12,7 +13,7 @@ import (
 const redisUrl = "local.lattice.cf:6379"
 
 func recordsPostHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Processing /data post request")
+	fmt.Println("Processing /records post request")
 	var records record.Records
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&records)
@@ -26,7 +27,10 @@ func recordsPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	health := health.NewApi(redisUrl)
+
 	fmt.Println("Starting godata server")
 	http.HandleFunc("/records", recordsPostHandler)
+	http.HandleFunc("/health", health.Status)
 	http.ListenAndServe(":8080", nil)
 }

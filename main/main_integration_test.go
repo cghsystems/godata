@@ -16,39 +16,60 @@ import (
 
 var _ = Describe("gosum", func() {
 	const (
-		url      = "http://localhost:8080/data"
 		redisUrl = "local.lattice.cf:6379"
 	)
 
-	var testRecords record.Records
+	var (
+		session *gexec.Session
+	)
 
 	BeforeEach(func() {
-		time := time.Date(2015, 1, 1, 12, 0, 0, 0, time.UTC)
+		binPath, err := gexec.Build("github.com/cghsystems/godata/main/")
+		Expect(err).ToNot(HaveOccurred())
+		cmd := exec.Command(binPath)
 
-		testRecords = record.Records{
-			record.Record{TransactionDate: time, Balance: 100},
-		}
+		session, err = gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
+		time.Sleep(3 * time.Second)
+		Expect(err).ToNot(HaveOccurred())
+	})
+
+	AfterEach(func() {
+		session.Terminate()
+		session.Wait()
+		Eventually(session).Should(gexec.Exit())
+	})
+
+	Describe("GET /health", func() {
+		It("returns the all clear", func() {
+			response, err := http.Get("http://localhost:8080/health")
+			Expect(err).ToNot(HaveOccurred())
+			Expect(response.StatusCode).To(Equal(200))
+		})
 	})
 
 	Describe("POST /data", func() {
+		const recordsUrl = "http://localhost:8080/records"
+		var testRecords record.Records
+
+		BeforeEach(func() {
+			c, _ := redis.DialTimeout("tcp", redisUrl, time.Duration(10)*time.Second)
+			defer c.Close()
+			c.Cmd("select", 0)
+			c.Cmd("FLUSHDB")
+		})
+
+		BeforeEach(func() {
+			time := time.Date(2015, 1, 1, 12, 0, 0, 0, time.UTC)
+
+			testRecords = record.Records{
+				record.Record{TransactionDate: time, Balance: 100},
+			}
+		})
+
 		It("persists all of the expected records", func() {
-			binPath, err := gexec.Build("github.com/cghsystems/godata/main/")
-			Ω(err).ShouldNot(HaveOccurred())
-			cmd := exec.Command(binPath)
-
-			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
-			time.Sleep(3 * time.Second)
-			Ω(err).ShouldNot(HaveOccurred())
-
-			defer func() {
-				session.Terminate()
-				session.Wait()
-				Eventually(session).Should(gexec.Exit())
-			}()
-
 			postRecords := func() bool {
 				recordAsJson, _ := json.Marshal(testRecords)
-				req, _ := http.NewRequest("POST", url, strings.NewReader(string(recordAsJson)))
+				req, _ := http.NewRequest("POST", recordsUrl, strings.NewReader(string(recordAsJson)))
 
 				client := &http.Client{}
 				_, err := client.Do(req)
