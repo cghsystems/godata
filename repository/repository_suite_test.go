@@ -11,7 +11,3 @@ func TestDb(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Repository Suite")
 }
-
-func startRedis() {
-
-}

@@ -36,12 +36,8 @@ var _ = Describe("Client", func() {
 		err              error
 	)
 
-	BeforeSuite(func() {
-		startRedis()
-	})
-
 	cleanRedis := func() {
-		c, _ := redis.DialTimeout("tcp", redisUrl, time.Duration(10)*time.Second)
+		c, _ := redis.DialTimeout("tcp", redisUrl, 3*time.Second)
 		defer c.Close()
 		c.Cmd("select", 0)
 		c.Cmd("FLUSHDB")
@@ -69,7 +65,7 @@ var _ = Describe("Client", func() {
 		var testRecords = record.Records{testRecord}
 
 		var actualRecords = func() record.Records {
-			redisClient, err := redis.DialTimeout("tcp", redisUrl, time.Duration(10)*time.Second)
+			redisClient, err := redis.DialTimeout("tcp", redisUrl, 3*time.Second)
 			bytes, err := redisClient.Cmd("smembers", "chris:gold:records").ListBytes()
 			if err != nil {
 				Expect(err).NotTo(HaveOccurred())

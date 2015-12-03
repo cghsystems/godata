@@ -21,7 +21,7 @@ var _ = Describe("gosum", func() {
 		session  *gexec.Session
 	)
 
-	BeforeEach(func() {
+	BeforeSuite(func() {
 		binPath, err := gexec.Build("github.com/cghsystems/godata/main/")
 		Expect(err).ToNot(HaveOccurred())
 		cmd := exec.Command(binPath)
@@ -31,7 +31,7 @@ var _ = Describe("gosum", func() {
 		Expect(err).ToNot(HaveOccurred())
 	})
 
-	AfterEach(func() {
+	AfterSuite(func() {
 		session.Terminate()
 		session.Wait()
 		Eventually(session).Should(gexec.Exit())

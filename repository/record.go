@@ -13,7 +13,7 @@ type RecordRepository struct {
 }
 
 func NewRecordRepository(url string) *RecordRepository {
-	c, _ := redis.DialTimeout("tcp", url, time.Duration(10)*time.Second)
+	c, _ := redis.DialTimeout("tcp", url, 3*time.Second)
 	c.Cmd("select", 0)
 	return &RecordRepository{redis: c}
 }
