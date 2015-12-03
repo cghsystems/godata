@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/cghsystems/godata/config"
 	"github.com/cghsystems/godata/health"
 	"github.com/cghsystems/godata/repository"
 	"github.com/cghsystems/gosum/record"
 )
-
-const redisUrl = "local.lattice.cf:6379"
 
 func recordsPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Processing /records post request")
@@ -22,12 +21,12 @@ func recordsPostHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	repository := repository.NewRecordRepository(redisUrl)
+	repository := repository.NewRecordRepository(config.RedisUrl())
 	repository.BulkInsert(records)
 }
 
 func main() {
-	health := health.NewApi(redisUrl)
+	health := health.NewApi(config.RedisUrl())
 
 	fmt.Println("Starting godata server")
 	http.HandleFunc("/records", recordsPostHandler)

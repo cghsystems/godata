@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cghsystems/godata/config"
 	"github.com/cghsystems/gosum/record"
 	"github.com/fzzy/radix/redis"
 	. "github.com/onsi/ginkgo"
@@ -15,12 +16,9 @@ import (
 )
 
 var _ = Describe("gosum", func() {
-	const (
-		redisUrl = "local.lattice.cf:6379"
-	)
-
 	var (
-		session *gexec.Session
+		redisUrl = config.RedisUrl()
+		session  *gexec.Session
 	)
 
 	BeforeEach(func() {
@@ -52,7 +50,8 @@ var _ = Describe("gosum", func() {
 		var testRecords record.Records
 
 		BeforeEach(func() {
-			c, _ := redis.DialTimeout("tcp", redisUrl, time.Duration(10)*time.Second)
+			c, err := redis.DialTimeout("tcp", redisUrl, time.Duration(10)*time.Second)
+			Expect(err).ToNot(HaveOccurred())
 			defer c.Close()
 			c.Cmd("select", 0)
 			c.Cmd("FLUSHDB")

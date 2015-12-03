@@ -9,7 +9,7 @@ import (
 
 func TestDb(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Db Suite")
+	RunSpecs(t, "Repository Suite")
 }
 
 func startRedis() {
