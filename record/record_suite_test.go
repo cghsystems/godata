@@ -27,7 +27,7 @@ func cleanRedis() {
 
 func actualRecords() domain.Records {
 	redisClient, err := redis.DialTimeout("tcp", config.RedisUrl(), 3*time.Second)
-	bytes, err := redisClient.Cmd("smembers", "chris:gold:records").ListBytes()
+	bytes, err := redisClient.Cmd("SMEMBERS", "chris:gold:records").ListBytes()
 	if err != nil {
 		Expect(err).NotTo(HaveOccurred())
 	}
