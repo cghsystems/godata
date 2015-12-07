@@ -27,7 +27,11 @@ func NewApi(redisUrl string) Health {
 	return Health{redisUrl}
 }
 
-func (health Health) Status(w http.ResponseWriter, r *http.Request) {
+func (health Health) Endpoint() (string, func(http.ResponseWriter, *http.Request)) {
+	return "/health", health.status
+}
+
+func (health Health) status(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 

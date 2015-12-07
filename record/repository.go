@@ -1,4 +1,4 @@
-package repository
+package record
 
 import (
 	"encoding/json"
@@ -8,17 +8,17 @@ import (
 	"github.com/fzzy/radix/redis"
 )
 
-type RecordRepository struct {
+type Repository struct {
 	redis *redis.Client
 }
 
-func NewRecordRepository(url string) *RecordRepository {
+func NewRepository(url string) *Repository {
 	c, _ := redis.DialTimeout("tcp", url, 3*time.Second)
 	c.Cmd("select", 0)
-	return &RecordRepository{redis: c}
+	return &Repository{redis: c}
 }
 
-func (c *RecordRepository) BulkInsert(records record.Records) error {
+func (c *Repository) BulkInsert(records record.Records) error {
 	for _, record := range records {
 		if err := c.set(record); err != nil {
 			return err
@@ -28,7 +28,7 @@ func (c *RecordRepository) BulkInsert(records record.Records) error {
 	return nil
 }
 
-func (c *RecordRepository) set(record record.Record) error {
+func (c *Repository) set(record record.Record) error {
 	json, err := json.Marshal(record)
 	if err != nil {
 		return err
@@ -47,6 +47,6 @@ func (c *RecordRepository) set(record record.Record) error {
 	return nil
 }
 
-func (c *RecordRepository) Close() {
+func (c *Repository) Close() {
 	c.redis.Close()
 }

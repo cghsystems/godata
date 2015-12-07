@@ -1,35 +1,24 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/cghsystems/godata/config"
 	"github.com/cghsystems/godata/health"
-	"github.com/cghsystems/godata/repository"
-	"github.com/cghsystems/gosum/record"
+	"github.com/cghsystems/godata/record"
 )
 
-func recordsPostHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Processing /records post request")
-	var records record.Records
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&records)
-
-	if err != nil {
-		panic(err)
-	}
-
-	repository := repository.NewRecordRepository(config.RedisUrl())
-	repository.BulkInsert(records)
+type Api interface {
+	EndpointHandleFunc() (url string, handleFunc func(string, string))
 }
 
 func main() {
-	health := health.NewApi(config.RedisUrl())
+	healthApi := health.NewApi(config.RedisUrl())
+	recordsApi := record.NewApi()
 
 	fmt.Println("Starting godata server")
-	http.HandleFunc("/records", recordsPostHandler)
-	http.HandleFunc("/health", health.Status)
+	http.HandleFunc(recordsApi.Endpoint())
+	http.HandleFunc(healthApi.Endpoint())
 	http.ListenAndServe(":8080", nil)
 }

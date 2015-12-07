@@ -50,7 +50,7 @@ var _ = Describe("gosum", func() {
 		var testRecords record.Records
 
 		BeforeEach(func() {
-			c, err := redis.DialTimeout("tcp", redisUrl, time.Duration(10)*time.Second)
+			c, err := redis.DialTimeout("tcp", redisUrl, 10*time.Second)
 			Expect(err).ToNot(HaveOccurred())
 			defer c.Close()
 			c.Cmd("select", 0)

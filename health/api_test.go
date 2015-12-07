@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Health", func() {
+var _ = Describe("Health Api", func() {
 	var (
 		redisUrl        string
 		redisConnection bool
@@ -22,9 +22,11 @@ var _ = Describe("Health", func() {
 		healthApi := health.NewApi(redisUrl)
 		response := httptest.NewRecorder()
 
-		request, err := http.NewRequest("GET", "/health", nil)
+		healthUrl, healthHandler := healthApi.Endpoint()
+		request, err := http.NewRequest("GET", healthUrl, nil)
 		Ω(err).ShouldNot(HaveOccurred())
-		healthApi.Status(response, request)
+
+		healthHandler(response, request)
 
 		body, err := ioutil.ReadAll(response.Body)
 		Ω(err).ShouldNot(HaveOccurred())
