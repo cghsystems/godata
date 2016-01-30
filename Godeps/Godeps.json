@@ -7,7 +7,7 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/cghsystems/gosum/record",
-			"Rev": "52a9e573ec1d019dea724658370358994a53670c"
+			"Rev": "76cec027cd5e9d29464856b2ba6cf383551d0d86"
 		},
 		{
 			"ImportPath": "github.com/fzzy/radix/redis",
