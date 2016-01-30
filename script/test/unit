@@ -1,0 +1,9 @@
+#!/bin/bash
+
+working_dir="/usr/local/go/src/github.com/cghsystems/godata"
+
+docker run -v "${PWD}":"${working_dir}" -w ${working_dir} cghsystems/golang \
+    godep restore && \
+    ginkgo -r
+
+
