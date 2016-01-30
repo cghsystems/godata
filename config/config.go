@@ -1,11 +1,51 @@
 package config
 
-import "github.com/cghsystems/godata/env"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+)
 
-func RedisUrl() string {
-	if value, err := env.Get("godata_redis_url", "127.0.0.1:6379"); err != nil {
-		panic("An unexpected error has occurred")
-	} else {
-		return value
+type service struct {
+	Credentials credentials `json:"credentials"`
+}
+
+type credentials struct {
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	Password string `json:"password"`
+}
+
+func RedisUrl() (string, error) {
+	services, err := getVcapServices()
+	if err != nil {
+		return "", err
 	}
+
+	redis := services["p-redis"]
+	if len(redis) < 1 {
+		return "", errors.New("Cannot find service with name 'p-redis'")
+	}
+
+	credentials := redis[0].Credentials
+
+	host := credentials.Host
+	port := credentials.Port
+	password := credentials.Password
+	url := fmt.Sprintf("redis://redis:%v@%v:%v", password, host, port)
+
+	fmt.Println("Using redis url: " + url)
+	return url, nil
+}
+
+func getVcapServices() (map[string][]service, error) {
+	servicesEnv := os.Getenv("VCAP_SERVICES")
+	if servicesEnv == "" {
+		return nil, errors.New("Cannot find VCAP_SERVICES environment variable")
+	}
+
+	services := map[string][]service{}
+	json.Unmarshal([]byte(servicesEnv), &services)
+	return services, nil
 }

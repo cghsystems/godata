@@ -1,6 +1,7 @@
 package record_test
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/cghsystems/godata/config"
@@ -14,8 +15,8 @@ var _ = Describe("Repository", func() {
 	var (
 		recordRepository *record.Repository
 		err              error
+		redisUrl         string
 		testTime         = time.Date(2015, 1, 1, 12, 0, 0, 0, time.UTC)
-		redisUrl         = config.RedisUrl()
 
 		testRecord = domain.Record{
 			TransactionDate:        testTime,
@@ -30,6 +31,7 @@ var _ = Describe("Repository", func() {
 	)
 
 	BeforeEach(func() {
+		redisUrl, _ = config.RedisUrl()
 		recordRepository = record.NewRepository(redisUrl)
 		cleanRedis()
 	})
@@ -38,7 +40,24 @@ var _ = Describe("Repository", func() {
 		recordRepository.Close()
 	})
 
-	Context("close", func() {
+	FDescribe("Get a months records", func() {
+		FIt("get some records", func() {
+			startDate, _ := time.Parse(time.RFC3339, "2009-01-01T00:00:00+00:00")
+			endDate, _ := time.Parse(time.RFC3339, "2009-01-31T00:00:00+00:00")
+
+			results := domain.Records{}
+			for _, record := range actualRecords() {
+				transactionDate := record.TransactionDate
+				if (transactionDate.Equal(startDate) || transactionDate.After(startDate)) &&
+					(transactionDate.Equal(endDate) || transactionDate.Before(endDate)) {
+					results = append(results, record)
+				}
+			}
+			fmt.Println(len(results))
+		})
+	})
+
+	Describe("close", func() {
 		It("closes the connection", func() {
 			recordRepository.Close()
 			records := domain.Records{testRecord}

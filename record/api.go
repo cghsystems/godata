@@ -27,7 +27,12 @@ func (api *api) Endpoint() (string, func(w http.ResponseWriter, r *http.Request)
 			panic(err)
 		}
 
-		repository := NewRepository(config.RedisUrl())
+		redisUrl, err := config.RedisUrl()
+		if err != nil {
+			panic(err)
+		}
+
+		repository := NewRepository(redisUrl)
 		repository.BulkInsert(records)
 	}
 }
