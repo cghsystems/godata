@@ -66,7 +66,7 @@ var _ = Describe("Repository", func() {
 		})
 	})
 
-	Context("BulkInsert", func() {
+	Describe("BulkInsert", func() {
 		var testRecords = domain.Records{testRecord}
 
 		BeforeEach(func() {
