@@ -1,0 +1,10 @@
+---
+platform: linux
+
+image: docker:///cghsysstems/golang
+
+inputs:
+- name: godata
+
+run:
+  path: godata/script/unit
