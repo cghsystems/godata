@@ -1,0 +1,10 @@
+jobs:
+- name: godata-unit
+  plan:
+  - task: godata-unit
+    config:
+      platform: linux
+      image: "docker:///cghsystems/golang"
+      run:
+        path: echo
+        args: ["Hello, world!"]

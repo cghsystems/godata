@@ -1,0 +1,8 @@
+{
+	"ImportPath": "github.com/cghsystems/godata/ci/docker",
+	"GoVersion": "go1.5.1",
+	"Packages": [
+		"./..."
+	],
+	"Deps": []
+}
