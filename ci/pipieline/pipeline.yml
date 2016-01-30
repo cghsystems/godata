@@ -1,10 +1,14 @@
 jobs:
-- name: godata-unit
-  plan:
-  - task: godata-unit
-    config:
-      platform: linux
-      image: "docker:///cghsystems/golang"
-      run:
-        path: echo
-        args: ["Hello, world!"]
+  - name: godata-unit
+    plan:
+      - get: godata
+        trigger: true
+      - task: unit
+        file: godata/ci/unit.yml
+
+resources:
+  - name: godata
+    type: git
+    source:
+      uri: https://github.com/cghsystems/godata.git
+      branch: master
