@@ -1,3 +1,0 @@
-#!/bin/bash
-
-ltc build-droplet cgh-data https://github.com/cloudfoundry/go-buildpack
