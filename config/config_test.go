@@ -40,7 +40,7 @@ var _ = Describe("Config", func() {
 		})
 
 		It("returns the godata url from vcap services", func() {
-			Expect(url).To(Equal("redis://redis:password@192.168.9.147:6379"))
+			Expect(url).To(Equal("192.168.9.147:6379"))
 		})
 		It("does not return  error", func() {
 			Expect(err).NotTo(HaveOccurred())

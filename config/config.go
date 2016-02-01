@@ -29,11 +29,9 @@ func RedisUrl() (string, error) {
 	}
 
 	credentials := redis[0].Credentials
-
 	host := credentials.Host
 	port := credentials.Port
-	password := credentials.Password
-	url := fmt.Sprintf("redis://redis:%v@%v:%v", password, host, port)
+	url := fmt.Sprintf("%v:%v", host, port)
 
 	fmt.Println("Using redis url: " + url)
 	return url, nil

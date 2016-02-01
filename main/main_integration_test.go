@@ -17,7 +17,7 @@ import (
 
 var _ = Describe("gosum", func() {
 	var (
-		redisUrl = config.RedisUrl()
+		redisUrl string
 		session  *gexec.Session
 	)
 
@@ -25,6 +25,9 @@ var _ = Describe("gosum", func() {
 		binPath, err := gexec.Build("github.com/cghsystems/godata/main/")
 		Expect(err).ToNot(HaveOccurred())
 		cmd := exec.Command(binPath)
+
+		redisUrl, err = config.RedisUrl()
+		Expect(err).ToNot(HaveOccurred())
 
 		session, err = gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		time.Sleep(3 * time.Second)
@@ -39,7 +42,7 @@ var _ = Describe("gosum", func() {
 
 	Describe("GET /health", func() {
 		It("returns the all clear", func() {
-			response, err := http.Get("http://localhost:8080/health")
+			response, err := http.Get("http://127.0.0.1:8080/health")
 			Expect(err).ToNot(HaveOccurred())
 			Expect(response.StatusCode).To(Equal(200))
 		})

@@ -14,7 +14,12 @@ type Api interface {
 }
 
 func main() {
-	healthApi := health.NewApi(config.RedisUrl())
+	redisUrl, err := config.RedisUrl()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	healthApi := health.NewApi(redisUrl)
 	recordsApi := record.NewApi()
 
 	fmt.Println("Starting godata server")
