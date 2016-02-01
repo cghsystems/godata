@@ -40,8 +40,8 @@ var _ = Describe("Repository", func() {
 		recordRepository.Close()
 	})
 
-	FDescribe("Get a months records", func() {
-		FIt("get some records", func() {
+	Describe("Get a months records", func() {
+		It("get some records", func() {
 			startDate, _ := time.Parse(time.RFC3339, "2009-01-01T00:00:00+00:00")
 			endDate, _ := time.Parse(time.RFC3339, "2009-01-31T00:00:00+00:00")
 
