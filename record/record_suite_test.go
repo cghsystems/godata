@@ -19,19 +19,19 @@ func TestApi(t *testing.T) {
 }
 
 func cleanRedis() {
-	//c, _ := redis.DialTimeout("tcp", config.RedisUrl(), 3*time.Second)
-	//defer c.Close()
-	//c.Cmd("select", 0)
-	//c.Cmd("FLUSHDB")
+	redisUrl, err := config.RedisUrl()
+	Expect(err).NotTo(HaveOccurred())
+	c, _ := redis.DialTimeout("tcp", redisUrl, 3*time.Second)
+	defer c.Close()
+	c.Cmd("select", 0)
+	c.Cmd("FLUSHDB")
 }
 
 func actualRecords() domain.Records {
 	redisUrl, _ := config.RedisUrl()
 	redisClient, err := redis.DialTimeout("tcp", redisUrl, 3*time.Second)
 	bytes, err := redisClient.Cmd("SMEMBERS", "chris:gold:records").ListBytes()
-	if err != nil {
-		Expect(err).NotTo(HaveOccurred())
-	}
+	Expect(err).NotTo(HaveOccurred())
 
 	records := domain.Records{}
 	for x := range bytes {
