@@ -19,7 +19,7 @@ install_dependencies() {
 }
 
 execute_tests() {
-  ginkgo -r --randomizeAllSpecs --failOnPending --randomizeSuites --race
+  ./script/test/unit
 }
 
 #
@@ -39,7 +39,6 @@ main() {
   move_project_to_gopath
   cd ${target_dir}
   install_dependencies
-  ls $GOPATH/bin
   execute_tests
 }
 
